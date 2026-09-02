@@ -16,6 +16,7 @@ form {
     width: 25em;
     margin: 10em auto;
     input
+}
 
 {
     width: 100%;
@@ -25,6 +26,7 @@ form {
     border-radius: 0.2em;
     color: #474747;
     &:focus
+}
 
 {
     outline: 0.1em solid #7CCC14;
