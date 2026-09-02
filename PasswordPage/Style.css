@@ -12,6 +12,7 @@ body {
 }
 
 form {
+    text-align: center;
     width: 25em;
     margin: 10em auto;
     input
