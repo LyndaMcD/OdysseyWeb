@@ -1,19 +1,29 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Odyssey</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Locked Page</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <main>
-        
-        <form>
-            <input type="text" name="password" value="" autocomplete="off" />
-            <button type="submit">Submit</button>
-        </form>
 
+    <main class="lock-container">
+        <h1>Enter the password</h1>
+        <p class="hint">You will need to have found and decoded it first.</p>
+
+        <div class="input-row">
+            <input type="text"
+                   id="password-input"
+                   placeholder="Password"
+                   autocomplete="off"
+                   spellcheck="false" />
+            <button id="submit-btn">Unlock</button>
+        </div>
+
+        <p id="error-msg" class="error"></p>
+
+        <div id="reveal-area" class="reveal hidden"></div>
     </main>
 
     <script src="script.js"></script>
