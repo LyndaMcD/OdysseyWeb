@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Submit your case file</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Franklin:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ---- Change these to reskin the page to match your ARG ---- */
+        :root {
+            --desk: #3a4550; /* background behind the sheet */
+            --paper: #e7eaec; /* the form sheet */
+            --ink: #1c2530; /* main text */
+            --faint: #6b7680; /* hints and rules */
+            --stamp: #a3262a; /* "received" stamp and errors */
+            --focus: #2d6fb3; /* keyboard focus ring */
+            --label-font: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+            --typed-font: "Courier Prime", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--desk);
+            color: var(--ink);
+            font-family: var(--label-font);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 3rem 1rem;
+        }
+
+        .sheet {
+            position: relative;
+            width: 100%;
+            max-width: 40rem;
+            background: var(--paper);
+            padding: 2.5rem 2.25rem 2rem;
+            box-shadow: 0 1px 0 #fff inset, 0 18px 40px rgba(0,0,0,.35);
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            line-height: 1.1;
+            margin: 0 0 .5rem;
+            letter-spacing: -.01em;
+        }
+
+        .intro {
+            margin: 0 0 2rem;
+            color: var(--faint);
+            line-height: 1.5;
+            max-width: 34rem;
+        }
+
+        .field {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: .95rem;
+            margin-bottom: .35rem;
+        }
+
+        .hint {
+            font-weight: 400;
+            color: var(--faint);
+            font-size: .85rem;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            font-family: var(--typed-font);
+            font-size: 1.05rem;
+            color: var(--ink);
+            background: transparent;
+            border: 0;
+            border-bottom: 1.5px solid var(--faint);
+            padding: .4rem .1rem;
+            border-radius: 0;
+        }
+
+        textarea {
+            min-height: 10rem;
+            resize: vertical;
+            line-height: 1.6;
+            border: 1.5px solid var(--faint);
+            padding: .6rem;
+        }
+
+            textarea.short {
+                min-height: 4.5rem;
+            }
+
+            input:focus, textarea:focus, button:focus-visible, input[type="checkbox"]:focus-visible {
+                outline: 3px solid var(--focus);
+                outline-offset: 2px;
+            }
+
+        .count {
+            text-align: right;
+            font-size: .8rem;
+            color: var(--faint);
+            margin-top: .25rem;
+        }
+
+        .consent {
+            display: flex;
+            gap: .6rem;
+            align-items: flex-start;
+            line-height: 1.4;
+        }
+
+            .consent input {
+                margin-top: .2rem;
+                width: 1.1rem;
+                height: 1.1rem;
+            }
+
+            .consent label {
+                font-weight: 400;
+                margin: 0;
+            }
+
+        /* Hidden field that only spam bots fill in */
+        .trap {
+            position: absolute;
+            left: -9999px;
+        }
+
+        button {
+            font-family: var(--label-font);
+            font-weight: 800;
+            font-size: 1rem;
+            background: var(--ink);
+            color: var(--paper);
+            border: 0;
+            padding: .85rem 1.6rem;
+            cursor: pointer;
+        }
+
+            button:disabled {
+                opacity: .5;
+                cursor: wait;
+            }
+
+        .error {
+            color: var(--stamp);
+            font-weight: 600;
+            margin: 1rem 0 0;
+            min-height: 1.5em;
+        }
+
+        /* ---- The one memorable moment: the stamp on success ---- */
+        .stamp {
+            position: absolute;
+            top: 38%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+            border: 5px solid var(--stamp);
+            color: var(--stamp);
+            font-family: var(--label-font);
+            font-weight: 800;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            padding: .3rem 1.2rem;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .sheet.filed .stamp {
+            animation: stamp .35s cubic-bezier(.3,1.6,.5,1) forwards;
+        }
+
+        .sheet.filed form {
+            opacity: .35;
+        }
+
+        @keyframes stamp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(-12deg) scale(2.2);
+            }
+
+            to {
+                opacity: .9;
+                transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+            }
+        }
+
+        .done {
+            display: none;
+            margin-top: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sheet.filed .done {
+            display: block;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sheet.filed .stamp {
+                animation: none;
+                opacity: .9;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sheet {
+                padding: 2rem 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="sheet" id="sheet">
+        <h1>Submit your case file</h1>
+        <p class="intro">Record what you found. Once filed, your report can't be changed, so check it before you submit.</p>
+
+        <form id="caseForm" novalidate>
+            <div class="field">
+                <label for="investigator_name">Investigator name <span class="hint">(optional)</span></label>
+                <input type="text" id="investigator_name" name="investigator_name" maxlength="60" autocomplete="nickname">
+            </div>
+
+            <div class="field">
+                <label for="university">University</label>
+                <input type="text" id="university" name="university" maxlength="120" required autocomplete="organization">
+            </div>
+
+            <div class="field">
+                <label for="entity_name">Entity name</label>
+                <input type="text" id="entity_name" name="entity_name" maxlength="120" required>
+            </div>
+
+            <div class="field">
+                <label for="reference">Reference <span class="hint">(a book, paper or other source; include the page number if you can)</span></label>
+                <textarea id="reference" name="reference" maxlength="500" required class="short"></textarea>
+            </div>
+
+            <div class="field">
+                <label for="findings">Findings and evidence <span class="hint">(optional)</span></label>
+                <textarea id="findings" name="findings" maxlength="3000"></textarea>
+                <div class="count" id="count">0 / 3000</div>
+            </div>
+
+            <div class="field consent">
+                <input type="checkbox" id="share_publicly" name="share_publicly">
+                <label for="share_publicly">Show my case file on the public case files page</label>
+            </div>
+
+            <div class="trap" aria-hidden="true">
+                <label for="website">Leave this empty</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button type="submit" id="submitBtn">File report</button>
+            <p class="error" id="error" role="alert"></p>
+        </form>
+
+        <div class="stamp" aria-hidden="true">Received</div>
+        <p class="done" role="status">Your case file has been filed.</p>
+    </main>
+
+    <!-- Supabase library, then your connection details -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/config.js"></script>
+    <script>
+        const db = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+
+        const form = document.getElementById("caseForm");
+        const btn = document.getElementById("submitBtn");
+        const errorBox = document.getElementById("error");
+        const findings = document.getElementById("findings");
+        const count = document.getElementById("count");
+
+        findings.addEventListener("input", () => {
+            count.textContent = findings.value.length + " / 3000";
+        });
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            errorBox.textContent = "";
+
+            // Spam bots fill in the hidden field; quietly ignore them
+            if (form.website.value) return;
+
+            const entry = {
+                investigator_name: form.investigator_name.value.trim() || null,
+                university: form.university.value.trim(),
+                entity_name: form.entity_name.value.trim(),
+                reference: form.reference.value.trim(),
+                findings: form.findings.value.trim() || null,
+                share_publicly: form.share_publicly.checked
+            };
+
+            const missing = [];
+            if (!entry.university) missing.push("university");
+            if (!entry.entity_name) missing.push("entity name");
+            if (!entry.reference) missing.push("reference");
+            if (missing.length) {
+                errorBox.textContent = "Fill in your " + missing.join(", ") + " before filing.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Filing…";
+
+            const { error } = await db.from("case_files").insert(entry);
+
+            if (error) {
+                console.error(error);
+                errorBox.textContent = "Your report wasn't filed. Check your connection and try again.";
+                btn.disabled = false;
+                btn.textContent = "File report";
+                return;
+            }
+
+            document.getElementById("sheet").classList.add("filed");
+            form.querySelectorAll("input, textarea, button").forEach(el => el.disabled = true);
+        });
+    </script>
+</body>
+</html>
