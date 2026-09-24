@@ -136,3 +136,4 @@ dist
 .pnp.*
 
 .vs/
+LocalOnly/encrypt-LOCAL-ONLY.js
