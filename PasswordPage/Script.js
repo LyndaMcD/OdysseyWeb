@@ -1,9 +1,4 @@
-﻿/*
-  ============================================================
-  script.js — the PUBLIC half of the lock.
-  Safe for GitHub / Netlify. Contains no password, no numbers.
-  ============================================================
-*/
+﻿
 
 const CIPHERTEXT_B64 = "9fW7dUyHhGzSjdzrBaM4xUP1Gt+f+1Pchx9IxAcnTW/N";
 
