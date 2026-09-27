@@ -252,6 +252,11 @@
             </div>
 
             <div class="field">
+                <label for="call_number">Call number <span class="hint">(from the spine label or the library catalogue)</span></label>
+                <input type="text" id="call_number" name="call_number" maxlength="60" required>
+            </div>
+
+            <div class="field">
                 <label for="findings">Findings and evidence <span class="hint">(optional)</span></label>
                 <textarea id="findings" name="findings" maxlength="3000"></textarea>
                 <div class="count" id="count">0 / 3000</div>
@@ -303,6 +308,7 @@
                 university: form.university.value.trim(),
                 entity_name: form.entity_name.value.trim(),
                 reference: form.reference.value.trim(),
+                call_number: form.call_number.value.trim(),
                 findings: form.findings.value.trim() || null,
                 share_publicly: form.share_publicly.checked
             };
@@ -311,6 +317,7 @@
             if (!entry.university) missing.push("university");
             if (!entry.entity_name) missing.push("entity name");
             if (!entry.reference) missing.push("reference");
+            if (!entry.call_number) missing.push("call number");
             if (missing.length) {
                 errorBox.textContent = "Fill in your " + missing.join(", ") + " before filing.";
                 return;

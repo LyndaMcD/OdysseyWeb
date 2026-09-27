@@ -2,17 +2,25 @@
     font-family: Georgia, 'Times New Roman', serif;
     background-color: #0d0d0d;
     color: #e6e6e6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
     margin: 0;
+    min-height: 100vh;
 }
+
+/* ============================================================
+   PASSWORD PAGE (index.html) — unchanged from before
+   ============================================================ */
 
 .lock-container {
     text-align: center;
     max-width: 420px;
     padding: 2rem;
+    margin: 0 auto;
+}
+
+body:has(.lock-container) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
@@ -75,4 +83,85 @@ h1 {
 
 .hidden {
     display: none;
+}
+
+/* ============================================================
+   ABOUT PAGE (about.html)
+   ============================================================ */
+
+.about-page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+    line-height: 1.7;
+    text-align: left;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+    .about-header h1 {
+        font-size: 2rem;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.5rem;
+    }
+
+    .about-header .subtitle {
+        color: #999;
+        font-style: italic;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+.about-section {
+    margin-bottom: 2rem;
+}
+
+    .about-section h2 {
+        font-size: 1.3rem;
+        letter-spacing: 0.03em;
+        margin-bottom: 1rem;
+        color: #e6e6e6;
+    }
+
+    .about-section p {
+        margin-bottom: 1.1rem;
+        color: #cfcfcf;
+    }
+
+        .about-section p:last-child {
+            margin-bottom: 0;
+        }
+
+.divider {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 2.5rem auto;
+    width: 60%;
+}
+
+.about-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+    text-align: center;
+}
+
+    .about-footer p {
+        color: #888;
+        font-size: 0.85rem;
+        font-style: italic;
+        margin: 0;
+    }
+
+@media (max-width: 500px) {
+    .about-page {
+        padding: 2.5rem 1.2rem 3.5rem;
+    }
+
+    .about-header h1 {
+        font-size: 1.6rem;
+    }
 }
