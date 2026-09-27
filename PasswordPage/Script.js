@@ -1,6 +1,11 @@
-﻿
+﻿/*
+  ============================================================
+  script.js — the PUBLIC half of the lock.
+  Safe for GitHub / Netlify. Contains no password, no numbers.
+  ============================================================
+*/
 
-const CIPHERTEXT_B64 = "U68+nHv27WqZJUixn9Ty1zFqLD9to/x0bcWVN6PaFdVW";
+const CIPHERTEXT_B64 = "9fW7dUyHhGzSjdzrBaM4xUP1Gt+f+1Pchx9IxAcnTW/N";
 
 // Matches the fixed reference value used in encrypt-LOCAL-ONLY.js
 const FIXED_IV = new Uint8Array(12); // 12 zeros — must match the encrypt script
@@ -8,19 +13,16 @@ const FIXED_IV = new Uint8Array(12); // 12 zeros — must match the encrypt scri
 async function tryUnlock(passwordAttempt) {
     const enc = new TextEncoder();
 
-    // Step 1: run the same "blender" process on whatever the visitor typed
     const hashBuffer = await crypto.subtle.digest('SHA-256', enc.encode(passwordAttempt));
     const key = await crypto.subtle.importKey('raw', hashBuffer, 'AES-GCM', false, ['decrypt']);
 
-    // Step 2: turn the stored gibberish back into raw bytes
     const ciphertext = Uint8Array.from(atob(CIPHERTEXT_B64), c => c.charCodeAt(0));
 
-    // Step 3: attempt to unscramble it using that key
     try {
         const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: FIXED_IV }, key, ciphertext);
-        return new TextDecoder().decode(decrypted); // success
+        return new TextDecoder().decode(decrypted);
     } catch {
-        return null; // wrong password — fails cleanly, reveals nothing
+        return null;
     }
 }
 
@@ -43,4 +45,5 @@ async function handleAttempt() {
         revealArea.classList.add('hidden');
         errorMsg.textContent = 'Incorrect.';
     }
+}
 }
