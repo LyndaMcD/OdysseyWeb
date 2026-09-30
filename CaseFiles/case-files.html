@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case files</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <main class="case-sheet">
+        <h1>Case files</h1>
+        <p class="intro">Reports filed by investigators who chose to share their findings.</p>
+
+        <p class="case-status" id="status" role="status">Loading case files…</p>
+        <div class="case-list" id="caseList"></div>
+    </main>
+
+    <!-- Supabase library, then your connection details -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/config.js"></script>
+    <script>
+        const statusBox = document.getElementById("status");
+        const list = document.getElementById("caseList");
+
+        // Builds one case file card. textContent keeps player text as plain text.
+        function caseCard(file) {
+            const card = document.createElement("article");
+            card.className = "case-card";
+
+            const meta = document.createElement("div");
+            meta.className = "record-meta";
+            const number = document.createElement("p");
+            number.innerHTML = "Case no. <strong></strong>";
+            number.querySelector("strong").textContent = file.id.slice(0, 8).toUpperCase();
+            const date = document.createElement("p");
+            date.textContent = "Filed " + new Date(file.created_at)
+                .toLocaleDateString("en-GB", { dateStyle: "long" });
+            meta.append(number, date);
+
+            const fields = document.createElement("dl");
+            fields.className = "record-fields";
+            const rows = [
+                ["Investigator", file.investigator_name || "Anonymous"],
+                ["University", file.university],
+                ["Entity name", file.entity_name],
+                ["Reference", file.reference],
+                ["Call number", file.call_number],
+                ["Findings and evidence", file.findings]
+            ];
+            rows.forEach(([label, value]) => {
+                if (!value) return; // skip empty optional fields
+                const dt = document.createElement("dt");
+                const dd = document.createElement("dd");
+                dt.textContent = label;
+                dd.textContent = value;
+                fields.append(dt, dd);
+            });
+
+            card.append(meta, fields);
+            return card;
+        }
+
+        async function loadCaseFiles() {
+            if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_KEY) {
+                statusBox.textContent = "The case files couldn't be loaded (js/config.js is missing or incomplete).";
+                return;
+            }
+
+            const db = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+
+            // The database only returns files that are shared (and approved, if moderation is on)
+            const { data, error } = await db
+                .from("case_files")
+                .select("id, created_at, investigator_name, university, entity_name, reference, call_number, findings")
+                .order("created_at", { ascending: false })
+                .limit(200);
+
+            if (error) {
+                console.error(error);
+                statusBox.textContent = "The case files couldn't be loaded. Try again in a moment. (Details: " + error.message + ")";
+                return;
+            }
+
+            if (!data.length) {
+                statusBox.textContent = "No case files have been made public yet.";
+                return;
+            }
+
+            statusBox.textContent = data.length === 1 ? "1 case file" : data.length + " case files";
+            data.forEach(file => list.append(caseCard(file)));
+        }
+
+        loadCaseFiles();
+    </script>
+</body>
+</html>
