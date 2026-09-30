@@ -579,3 +579,22 @@ body:has(.case-sheet) {
             font-size: 1.6rem;
         }
 }
+
+/* Stamp is invisible and unclickable until the file is filed */
+.stamp {
+    visibility: hidden;
+}
+
+.case-sheet.filed .stamp {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.stamp-link {
+    display: block;
+    margin-top: .3rem;
+    font-size: .9rem;
+    color: inherit;
+    text-align: center;
+    text-underline-offset: .2em;
+}
